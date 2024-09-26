@@ -11,7 +11,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the application code into the container
-COPY . .
+COPY . /app
 
 # Set the environment variable for Django
 ENV DJANGO_SETTINGS_MODULE=politicalcandidateTT.settings
