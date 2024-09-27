@@ -39,7 +39,7 @@ def login(request):
         if form.is_valid():
             user = form.get_user()
             auth_login(request, user)
-            return redirect('News')  # Redirect to the news page after successful login
+            return redirect('news_list')  # Redirect to the news page after successful login
         else:
             messages.error(request, "Invalid username or password.")  # Display an error message for invalid login
     else:
