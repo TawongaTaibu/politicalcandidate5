@@ -46,6 +46,6 @@ import sys
 sys.path.insert(0, os.path.abspath('../..'))
 
 # Set the environment variable for Django settings module
-os.environ['DJANGO_SETTINGS_MODULE'] = 'dfa.settings'  # Replace with your Django project settings
+os.environ['DJANGO_SETTINGS_MODULE'] = 'politicalcandidate.settings'  # Replace with your Django project settings
 
 
