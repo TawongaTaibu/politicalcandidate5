@@ -14,7 +14,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . /app
 
 # Set the environment variable for Django
-ENV DJANGO_SETTINGS_MODULE=politicalcandidateTT.settings
+ENV DJANGO_SETTINGS_MODULE=politicalcandidate.settings
 
 # Expose port 8000 for the Django app
 EXPOSE 8000
