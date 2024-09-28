@@ -1,3 +1,18 @@
+"""
+views.py
+--------
+
+This module contains the views for handling the display and interaction
+with the political party's web application.
+
+Functions:
+    home: Render the homepage with global warming data.
+    login: Handle the user's login process.
+    registration: Handle user registration process.
+    News_View: View a specific news item (login required).
+    news_list: Display a list of all news items.
+"""
+
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login as auth_login
@@ -15,7 +30,8 @@ def home(request):
         request (HttpRequest): The HTTP request object.
 
     Returns:
-        HttpResponse: The rendered homepage template.
+        HttpResponse: The rendered homepage template with global warming data
+        as context variables.
     """
     global_warming_data = {
         'temperature_rise': '1.1°C',
@@ -32,29 +48,39 @@ def login(request):
         request (HttpRequest): The HTTP request object.
 
     Returns:
-        HttpResponse: The rendered login template or redirect to the news page.
+        HttpResponse: Renders the login form on GET request. On POST, attempts
+        to log the user in and redirects to the news list page on success, or 
+        re-renders the login template with an error message on failure.
+    
+    Raises:
+        ValueError: If the provided credentials are invalid.
     """
     if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
             user = form.get_user()
             auth_login(request, user)
-            return redirect('news_list')  # Redirect to the news page after successful login
+            return redirect('news_list')
         else:
-            messages.error(request, "Invalid username or password.")  # Display an error message for invalid login
+            messages.error(request, "Invalid username or password.")
     else:
         form = AuthenticationForm()
     return render(request, 'login.html', {'form': form})
 
 def registration(request):
     """
-    Handle user registration process.
+    Handle the user registration process.
 
     Args:
         request (HttpRequest): The HTTP request object.
 
     Returns:
-        HttpResponse: The rendered registration template or redirect to the login page.
+        HttpResponse: Renders the registration form on GET request. On POST,
+        it processes the user registration, saves the new user, and redirects
+        to the login page on success.
+    
+    Raises:
+        ValidationError: If the form data is invalid during the registration.
     """
     if request.method == 'POST':
         form = CreateUserForm(request.POST)
@@ -68,14 +94,18 @@ def registration(request):
 @login_required
 def News_View(request, id):
     """
-    View a specific news item, requiring the user to be logged in.
+    View a specific news item. This view requires the user to be logged in.
 
     Args:
         request (HttpRequest): The HTTP request object.
         id (int): The ID of the news item to view.
 
     Returns:
-        HttpResponse: The rendered news view template.
+        HttpResponse: The rendered news detail template displaying the selected
+        news item.
+    
+    Raises:
+        Http404: If no news item is found with the given ID.
     """
     selected_news = get_object_or_404(News, id=id)
     return render(request, 'News_View.html', {'selected_news': selected_news})
@@ -88,7 +118,7 @@ def news_list(request):
         request (HttpRequest): The HTTP request object.
 
     Returns:
-        HttpResponse: The rendered news list template.
+        HttpResponse: The rendered news list template displaying all news items.
     """
     news_items = News.objects.all()
     return render(request, 'news_list.html', {'news_items': news_items})
